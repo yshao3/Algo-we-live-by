@@ -66,4 +66,14 @@ for i in range(1, 25):
 	train_mse.append(mse_tr)
 	test_mse.append(mse_te)
 
+k = []
+for i in range (1,25):
+    k.append(i)
+plta=plt.plot(k,train_mse, '--', label='Train')
+pltb=plt.plot(k,test_mse,'--', label='Test')
+plt.ylabel('Mean Square Error')
+plt.xlabel('k nearest neighbor')
+plt.title("Learning Curve Analysis")
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2)
+plt.show()
 
