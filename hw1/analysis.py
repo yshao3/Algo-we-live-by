@@ -19,7 +19,7 @@ def importdata(path):
 				res[i].append(int(row[i+1]))
 	return res
 
-# Cross validation
+# Leave one out
 def Leaveoneout(X, j):
 	Xtrain = []
 	Xtest = []
@@ -76,9 +76,12 @@ def knn_prediction(k, Xtrain, Xtest):
 
 X = importdata("mattersOfTaste.csv")
 similarity = Pearson(X)
-Index_max = similarity.mean(axis = 1).argmax(axis = 0)
-Index_min = similarity.mean(axis = 1).argmin(axis = 0)
-print Index_max, Index_min
+Index_max = similarity.std(axis = 1).argmax(axis = 0)
+Index_min = similarity.std(axis = 1).argmin(axis = 0)
+# print Index_min, Index_max
+# Index_max = similarity.mean(axis = 1).argmax(axis = 0)
+# Index_min = similarity.mean(axis = 1).argmin(axis = 0)
+# print Index_min, Index_max
 train_mse = [0]*24
 test_mse = [0]*24
 max_sim = [0]*24
@@ -86,7 +89,7 @@ min_sim = [0]*24
 
 for j in range(0, 19):	
 	Xtrain, Xtest = Leaveoneout(X, j)
-	# calculate mean square error according to number of nearest neighbors
+	# Calculate mean square error according to number of nearest neighbors
 	for i in range(1, 25):
 		mse_tr, mse_te = knn_prediction(i, Xtrain, Xtest)
 		train_mse[i-1] += mse_tr.mean(axis = 0)
@@ -98,11 +101,12 @@ test_mse = (np.array(test_mse)/20).tolist()
 max_sim = (np.array(max_sim)/20).tolist()
 min_sim = (np.array(min_sim)/20).tolist()
 
-print train_mse[0],train_mse[4], train_mse[23]
-print test_mse[0],test_mse[4], test_mse[23]
-print max_sim[0],max_sim[4], max_sim[23]
-print min_sim[0], min_sim[4], min_sim[23]
-print train_mse
+print "training: k=1 "+str(train_mse[0]),"k=5 "+str(train_mse[4]), "k=24 "+str(train_mse[23])
+print "testing: k=1 "+str(test_mse[0]),"k=5 "+str(test_mse[4]), "k=24 "+str(test_mse[23])
+print "highest mean similarity: k=1 "+str(max_sim[0]),"k=5 "+str(max_sim[4]), "k=24 "+str(max_sim[23])
+print "lowest mean similarity: k=1 "+str(min_sim[0]),"k=5 "+str(min_sim[4]), "k=24 "+str(min_sim[23])
+
+
 # Plot Image
 k = []
 for i in range (1,25):
